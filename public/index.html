@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Post Web App</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <h1>My Posts</h1>
+  
+  <form id="postForm">
+    <input type="text" id="title" placeholder="Add Post" required />
+    <button type="submit">Add Post</button>
+  </form>
+
+  <ul id="post-list"></ul>
+
+  <script>
+    function loadPosts() {
+      fetch('/api/posts')
+        .then(response => response.json())
+        .then(posts => {
+          const list = document.getElementById('post-list');
+          list.innerHTML = '';
+          posts.forEach(post => {
+            const li = document.createElement('li');
+            li.textContent = post.title;
+            list.appendChild(li);
+          });
+        });
+    }
+
+    document.getElementById('postForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const title = document.getElementById('title').value;
+
+      fetch('/api/posts', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ title })
+      })
+      .then(res => res.json())
+      .then(() => {
+        document.getElementById('title').value = '';
+        loadPosts();
+      });
+    });
+
+    loadPosts();
+  </script>
+</body>
+</html>
+
