@@ -13,6 +13,8 @@ spec:
       labels:
         app: my-posts-web-app
     spec:
+      imagePullSecrets:
+        - name: acr-secret
       containers:
       - name: my-posts-web-app
         image: acrdevuk.azurecr.io/my-posts-web-app:latest
